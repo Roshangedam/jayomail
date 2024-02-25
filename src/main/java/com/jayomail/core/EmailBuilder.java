@@ -72,15 +72,15 @@ public class EmailBuilder implements Email {
         }
     }
 
-
-    public Map<String, String> send() {
-        Map<String, String> response = new HashMap<>();
+    @Override
+    public EmailResponse send() {
+    	EmailResponse response = new EmailResponse();
 
         if (strategy != null) {
             try {
                 response = strategy.sendEmail(senderEmail, appPassword, recipientEmail,
                         subject, body, htmlContent, attachments);
-                response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+                response.setTimestamp( LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
                 cleanTemp();
             } catch (Exception e) {
                 String errorMessage = e.getMessage();
@@ -88,21 +88,21 @@ public class EmailBuilder implements Email {
                     errorMessage += " [Server: " + ((CustomStratergy) strategy).getEmailServer() +
                             ", Port: " + ((CustomStratergy) strategy).getEmailPort() + "]";
                 }
-                response.put("status", "Failure");
-                response.put("error_message", errorMessage);
-                response.put("from", senderEmail);
-                response.put("to", recipientEmail);
-                response.put("subject", subject);
-                response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+                response.setStatus("Failure");
+                response.setErrorMessage(errorMessage);
+                response.setFrom(senderEmail);
+                response.setTo( recipientEmail);
+                response.setSubject(subject);
+                response.setTimestamp(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
                 cleanTemp();
             }
         } else {
-            response.put("status", "Failure");
-            response.put("error_message", "Strategy not set. Use setStrategy() to set the email strategy.");
-            response.put("from", null);
-            response.put("to", null);
-            response.put("subject", null);
-            response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+            response.setStatus("Failure");           
+            response.setErrorMessage("Strategy not set. Use setStrategy() to set the email strategy.");
+            response.setFrom(null);
+            response.setTo( null);
+            response.setSubject(null);
+            response.setTimestamp( LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
         }
 
         return response;
@@ -192,5 +192,7 @@ public class EmailBuilder implements Email {
     public void clearAttachments() {
         this.attachments.clear();
     }
+    
+    
 }
 

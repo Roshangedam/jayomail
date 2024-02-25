@@ -3,6 +3,7 @@ package com.jayomail.stratergy;
 import java.util.List;
 import java.util.Map;
 
+import com.jayomail.core.EmailResponse;
 import com.jayomail.enums.MailProtocol;
 
 /**
@@ -87,10 +88,10 @@ public class IceWarpStratergy extends EmailStratergy {
      * @param body           The email body.
      * @param htmlContent    The HTML content of the email (optional).
      * @param attachments    The list of file paths to be attached (optional).
-     * @return A map containing information about the email sending status.
+     * @return A EmailResponse containing information about the email sending status.
      */
     @Override
-    public Map<String, String> sendEmail(String senderEmail, String appPassword, String recipientEmail, String subject, String body, String htmlContent, List<String> attachments) {
+    public EmailResponse sendEmail(String senderEmail, String appPassword, String recipientEmail, String subject, String body, String htmlContent, List<String> attachments) {
         return send(senderEmail, appPassword, recipientEmail, subject, body, htmlContent, attachments);
     }
 }

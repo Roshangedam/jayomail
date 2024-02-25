@@ -5,7 +5,7 @@ JayoMail is an open-source Java utility for sending emails with different email 
 
 ## Features 🚀
 
-- **Modular Architecture:** Choose from different email protocols like SMTP, IMAP, etc.
+- **Modular Architecture:** Choose from different email strategies like Gmail, IceWarp, etc.
 - **Builder Pattern:** Easily configure and customize emails using a builder pattern.
 - **Template Support:** Support for email templates with dynamic values.
 - **File Attachment:** Attach files from local paths or URLs.
@@ -29,60 +29,57 @@ Add the following dependency to your `pom.xml`:
 ### Prerequisites 📋
 
 - Java Development Kit (JDK) 8 or higher
-- Apache Maven
 
 ## Usage 🖥️
 
 ```java
-// Your Java class
+package com.jayomail.test;
 
-import io.github.roshangedam.jayomail.core.*;
-import io.github.roshangedam.jayomail.strategy.*;
-import io.github.roshangedam.jayomail.template.*;
+import com.jayomail.core.Email;
+import com.jayomail.core.EmailBuilder;
+import com.jayomail.core.EmailResponse;
+import com.jayomail.stratergy.GmailStratergy;
+import com.jayomail.template.HTMLTemplate;
 
 public class Main {
-    public static void main(String[] args) {
-        // Create an email builder object
-        EmailBuilder builder = new EmailBuilder()
-            .setProtocol(MailProtocol.SMTP)  
-            .setSender("sender@example.com")
-            .setPassword("SenderPassword");
+    public static void main(String[] args) {    	
+    	Email roshan = new EmailBuilder()
+            .setStrategy(new GmailStratergy())
+            .setSenderEmail("sender@example.com"")
+            .setSenderPassword("SenderPassword")
+            .build();
 
-        // Build the email object
-        Email email = builder.build();
-
-        // Set email subject
-        email.setSubject("Mail from JayoMail");
-
-        // Set email body from HTML template
-        email.setBodyFromTemplate(new HTMLTemplate()
-                                    .setFilePath("jayomail/template/test.html")
-                                    .setValue("greeting", "Hello JayoMail")
-                                    .setValue("from", "JayoMail Developer"));
-
-        // Attach an image file
-        email.attachFile("jayomail/images/icon.png");
-
-        // Set recipient email address
-        email.setRecipient("recipient@example.com");
-
-        // Send the email
-        EmailResponse response = email.send();
+        roshan.setMaxAttachmentSize(10);
+        roshan.setSubject("Mail from Jayomail ");
+        roshan.setBody("");
+        
+        /*
+	        html file to be like 
+	        <div>  
+	        		{{greeting}} This message is from
+	        		    {{from}}
+	        		    Thank you
+	         </div>        
+        */
+        
+        roshan.setBodyFromTemplate(new HTMLTemplate()
+            .loadFromFile("src/main/resources/template/test.html")
+            .setValue("greeting", "hello bholya")
+            .setValue("from", "Jayomail developer")
+        );
+        
+        
+        roshan.attachFile("some/file/name");
+        roshan.setRecipientEmail("recipient@example");
+        EmailResponse response = roshan.send();
         
         // Displaying the response details
-        System.out.println("Status: " + response.getStatus());
-        System.out.println("From: " + response.getFrom());
-        System.out.println("To: " + response.getTo());
-        System.out.println("Subject: " + response.getSubject());
-        System.out.println("Timestamp: " + response.getTimestamp());
-
-        // If there was a failure, print the error message
-        if (response.getStatus().equals("Failure")) {
-            System.out.println("Error Message: " + response.getErrorMessage());
-        }
+        System.out.println(response);               
     }
 }
 ```
+
+Make sure to replace placeholder values such as `rgedam@micoproindia.com`, `Pass@1234`, `roshangedam1998@gmail.com`, and file paths with actual values or variables as needed.
 
 ## Contributing 🤝
 
@@ -101,5 +98,3 @@ This project is licensed under the [License](LICENSE.md) - see the [LICENSE.md](
 This version of JayoMail supports email templates with dynamic values using the `HTMLTemplate` class. You can attach files from local paths or URLs using the `attachFile` method.
 
 ---
-
-Make sure to replace the placeholder values such as `sender@example.com`, `SenderPassword`, `recipient@example.com`, and file paths with actual values or variables as needed. Additionally, customize the template file paths and image file paths according to your project structure.

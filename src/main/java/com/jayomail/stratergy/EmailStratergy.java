@@ -21,6 +21,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import com.jayomail.core.EmailResponse;
 import com.jayomail.enums.MailProtocol;
 
 public abstract class EmailStratergy {
@@ -60,13 +61,12 @@ public abstract class EmailStratergy {
         props.putAll(additionalProperties);
         return Session.getDefaultInstance(props);
     }
-	public abstract Map<String, String> sendEmail(String senderEmail, String appPassword, String recipientEmail,
+	public abstract EmailResponse sendEmail(String senderEmail, String appPassword, String recipientEmail,
 			String subject, String body, String htmlContent, List<String> attachments);
 
-	protected Map<String, String> send(String senderEmail, String appPassword, String recipientEmail, String subject,
+	protected EmailResponse send(String senderEmail, String appPassword, String recipientEmail, String subject,
 			String body, String htmlContent, List<String> attachments) {
-		Map<String, String> response = new HashMap<>();
-
+		EmailResponse response= new EmailResponse();
 		Session session = createMailSession();
 
 		try {
@@ -101,30 +101,31 @@ public abstract class EmailStratergy {
 			msg.setContent(multipart);
 			Transport.send(msg, senderEmail, appPassword);
 
-			// Populate response map with information for success
-										
-			response.put("timestamp", new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()));
-			response.put("email_server", emailServer);
-			response.put("email_protocol", emailProtocol.toString());
-			response.put("email_port", String.valueOf(emailPort));
-			response.put("subject", subject);
-			response.put("to", recipientEmail);
-			response.put("from", senderEmail);
-			response.put("status", "Success");
+			// Populate response with EmailResponse information for success
+			
+			response.setTimestamp(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()));
+			response.setEmailServer(emailServer);
+			response.setEmailProtocol(emailProtocol.toString());
+			response.setEmailPort( String.valueOf(emailPort));
+			response.setSubject( subject);
+			response.setTo(recipientEmail);
+			response.setFrom(senderEmail);
+			response.setStatus("Success");
 
 			// System.out.println("Email sent successfully.");
 		} catch (MessagingException e) {
 			e.printStackTrace();
-			// Populate response map with information for failure
-			response.put("status", "Failure");
-			response.put("from", senderEmail);
-			response.put("to", recipientEmail);
-			response.put("subject", subject);
-			response.put("timestamp", new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()));
-			response.put("email_server", emailServer);
-			response.put("email_protocol", emailProtocol.toString());
-			response.put("email_port", String.valueOf(emailPort));			
-			response.put("error_message", e.getMessage()); // Include error message in response
+			// Populate response  with information for failure
+			response.setTimestamp(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()));
+			response.setEmailServer(emailServer);
+			response.setEmailProtocol(emailProtocol.toString());
+			response.setEmailPort( String.valueOf(emailPort));
+			response.setSubject( subject);
+			response.setTo(recipientEmail);
+			response.setFrom(senderEmail);
+			response.setStatus("Failure:");
+			response.setErrorMessage(e.getMessage());
+			 // Include error message in response
 		}
 
 		return response;

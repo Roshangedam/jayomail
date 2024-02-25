@@ -16,7 +16,7 @@ public interface Email {
      * @param strategy The email strategy to use.
      * @return The updated Email instance.
      */
-    Email setStrategy(EmailStratergy strategy);
+	public Email setStrategy(EmailStratergy strategy);
 
     /**
      * Sets the sender's email address.
@@ -24,7 +24,7 @@ public interface Email {
      * @param senderEmail The sender's email address.
      * @return The updated Email instance.
      */
-    Email setSenderEmail(String senderEmail);
+    public Email setSenderEmail(String senderEmail);
 
     /**
      * Sets the sender's email password or application-specific password.
@@ -32,14 +32,14 @@ public interface Email {
      * @param appPassword The sender's email password.
      * @return The updated Email instance.
      */
-    Email setSenderPassword(String appPassword);
+    public Email setSenderPassword(String appPassword);
 
     /**
      * Sets the recipient's email address.
      *
      * @param recipientEmail The recipient's email address.
      */
-    void setRecipientEmail(String recipientEmail);
+    public void setRecipientEmail(String recipientEmail);
 
     /**
      * Sets the subject of the email.
@@ -47,7 +47,7 @@ public interface Email {
      * @param subject The subject of the email.
      * @return The updated Email instance.
      */
-    Email setSubject(String subject);
+    public Email setSubject(String subject);
 
     /**
      * Sets the body content of the email.
@@ -55,14 +55,14 @@ public interface Email {
      * @param body The body content of the email.
      * @return The updated Email instance.
      */
-    Email setBody(String body);
+    public Email setBody(String body);
 
     /**
      * Sets the maximum attachment size allowed for the email.
      *
      * @param maxAttachmentSizeMb The maximum attachment size in megabytes.
      */
-    void setMaxAttachmentSize(long maxAttachmentSizeMb);
+    public void setMaxAttachmentSize(long maxAttachmentSizeMb);
 
     /**
      * Sets the body content of the email from a template.
@@ -70,36 +70,36 @@ public interface Email {
      * @param template The template to use for generating the email body.
      * @return The updated Email instance.
      */
-    Email setBodyFromTemplate(Template template);
+    public Email setBodyFromTemplate(Template template);
 
     /**
      * Attaches a file to the email.
      *
      * @param fileSource The path or URL of the file to attach.
      */
-    void attachFile(String fileSource);
+    public void attachFile(String fileSource);
 
     /**
      * Sends the email using the configured strategy.
      *
-     * @return A map containing information about the sending status.
+     * @return A EmailResponse containing information about the sending status.
      */
-    Map<String, String> send();
+    public EmailResponse send();
 
     /**
      * Clears the content of the email (subject, body, attachments).
      */
-    void clear();
+    public void clear();
 
     /**
      * Builds the email.
      *
      * @return The built Email instance.
      */
-    EmailBuilder build();
+    public EmailBuilder build();
 
     /**
      * Clears all attachments attached to the email.
      */
-    void clearAttachments();
+    public void clearAttachments();
 }
