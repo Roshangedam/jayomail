@@ -1,0 +1,13 @@
+com\jayomail\core\Email.class
+com\jayomail\core\EmailBuilder.class
+com\jayomail\stratergy\IceWarpStratergy$1.class
+com\jayomail\stratergy\GmailStratergy$1.class
+com\jayomail\stratergy\IceWarpStratergy.class
+com\jayomail\stratergy\GmailStratergy.class
+com\jayomail\enums\MailProtocol.class
+com\jayomail\core\FileUtil.class
+com\jayomail\stratergy\EmailStratergy.class
+com\jayomail\test\Main.class
+com\jayomail\template\Template.class
+com\jayomail\template\HTMLTemplate.class
+com\jayomail\stratergy\CustomStratergy.class

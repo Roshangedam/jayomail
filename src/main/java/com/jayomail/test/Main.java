@@ -1,20 +1,26 @@
 package com.jayomail.test;
+import java.util.HashMap;
 import java.util.Map;
 
+import com.jayomail.core.Email;
 import com.jayomail.core.EmailBuilder;
+import com.jayomail.enums.MailProtocol;
 import com.jayomail.stratergy.CustomStratergy;
+import com.jayomail.stratergy.GmailStratergy;
 import com.jayomail.template.HTMLTemplate;
 
 public class Main {
     public static void main(String[] args) {
-    	EmailBuilder roshan = new EmailBuilder()
-            .setStrategy(new CustomStratergy("mail.microproindia.com",587))
+    	Map<String, String> prop =new  HashMap<String, String>();
+    	prop.put("mail.store.protocol", "imaps");
+    	Email roshan = new EmailBuilder()
+            .setStrategy(new GmailStratergy(MailProtocol.IMAP,prop))
             .setSenderEmail("rgedam@microproindia.com")
             .setSenderPassword("Pass@1234")
             .build();
 
         roshan.setMaxAttachmentSize(10);
-        roshan.setSubject("Mail from Jayomail");
+        roshan.setSubject("Mail from pop ");
         roshan.setBody("");
         roshan.setBodyFromTemplate(new HTMLTemplate()
             .loadFromFile("src/main/resources/template/test.html")

@@ -12,17 +12,37 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
+/**
+ * HTMLTemplate class represents a template for generating HTML content.
+ * It provides methods to set the template content, replace placeholder values,
+ * load content from a URL or a file, and build the final HTML content.
+ */
 public class HTMLTemplate extends Template {
+
+    /**
+     * Default constructor.
+     */
     public HTMLTemplate() {
         super();
     }
 
+    /**
+     * Sets the content of the HTML template.
+     * @param content The HTML content to set as the template.
+     * @return The HTMLTemplate object.
+     */
     @Override
     public HTMLTemplate setTemplate(String content) {
         this.content = content;
         return this;
     }
 
+    /**
+     * Replaces a placeholder in the template with a specified value.
+     * @param key The placeholder key to replace.
+     * @param value The value to replace the placeholder with.
+     * @return The HTMLTemplate object.
+     */
     @Override
     public HTMLTemplate setValue(String key, String value) {
         if (this.content != null) {
@@ -31,10 +51,20 @@ public class HTMLTemplate extends Template {
         return this;
     }
 
+    /**
+     * Builds the final HTML content after replacing all placeholder values.
+     * @return The final HTML content.
+     */
     @Override
     public String build() {
         return this.content;
     }
+
+    /**
+     * Loads HTML content from a URL and sets it as the template content.
+     * @param url The URL to fetch the HTML content from.
+     * @return The HTMLTemplate object.
+     */
     public HTMLTemplate loadFromUrl(String url) {
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             HttpGet request = new HttpGet(url);
@@ -59,6 +89,11 @@ public class HTMLTemplate extends Template {
         return this;
     }
 
+    /**
+     * Loads HTML content from a file and sets it as the template content.
+     * @param filePath The path to the HTML file.
+     * @return The HTMLTemplate object.
+     */
     public HTMLTemplate loadFromFile(String filePath) {
         try {
             File file;
@@ -91,8 +126,12 @@ public class HTMLTemplate extends Template {
         return this;
     }
 
+    /**
+     * Retrieves the content of the HTML template.
+     * @return The HTML content of the template.
+     */
     @Override
     public String getContent() {
-    	return this.content;
+        return this.content;
     }
 }

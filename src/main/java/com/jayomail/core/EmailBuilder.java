@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
 
-public class EmailBuilder {
+public class EmailBuilder implements Email {
     private EmailStratergy strategy;
     private String senderEmail;
     private String appPassword;
@@ -32,11 +32,13 @@ public class EmailBuilder {
     public EmailBuilder(long defaultMaxAttachmentSizeMb) {
         this.maxAttachmentSizeBytes = defaultMaxAttachmentSizeMb * 1024 * 1024; // Default: 10 MB
     }
-
+    
+    @Override
     public void setMaxAttachmentSize(long maxAttachmentSizeMb) {
         this.maxAttachmentSizeBytes = maxAttachmentSizeMb * 1024 * 1024;
     }
 
+    @Override
     public void attachFile(String fileSource) {
         if (isURL(fileSource)) {
             try {
@@ -70,6 +72,7 @@ public class EmailBuilder {
         }
     }
 
+
     public Map<String, String> send() {
         Map<String, String> response = new HashMap<>();
 
@@ -82,8 +85,8 @@ public class EmailBuilder {
             } catch (Exception e) {
                 String errorMessage = e.getMessage();
                 if (strategy instanceof CustomStratergy) {
-                    errorMessage += " [Server: " + ((CustomStratergy) strategy).getSmtpServer() +
-                            ", Port: " + ((CustomStratergy) strategy).getSmtpPort() + "]";
+                    errorMessage += " [Server: " + ((CustomStratergy) strategy).getEmailServer() +
+                            ", Port: " + ((CustomStratergy) strategy).getEmailPort() + "]";
                 }
                 response.put("status", "Failure");
                 response.put("error_message", errorMessage);
@@ -106,6 +109,7 @@ public class EmailBuilder {
     }
 
 
+    @Override
     public EmailBuilder setStrategy(EmailStratergy strategy) {
         this.strategy = strategy;
         return this;
@@ -115,32 +119,37 @@ public class EmailBuilder {
         this.senderEmail = senderEmail;
         return this;
     }
-
+    
+    @Override
     public EmailBuilder setSenderPassword(String appPassword) {
         this.appPassword = appPassword;
         return this;
     }
 
+    @Override
     public void setRecipientEmail(String recipientEmail) {
         this.recipientEmail = recipientEmail;
     }
 
+    @Override
     public EmailBuilder setSubject(String subject) {
         this.subject = subject;
         return this;
     }
 
+    @Override
     public EmailBuilder setBody(String body) {
         this.body = body;
         return this;
     }
     
-    
+    @Override
     public EmailBuilder setBodyFromTemplate(Template template) {
         this.htmlContent = template.getContent();
         return this;
     }
     
+    @Override
     public EmailBuilder build() {
         return this;
     }
@@ -171,6 +180,7 @@ public class EmailBuilder {
         }
     }
     
+    @Override
     public void clear() {
         this.subject = "";
         this.body = "";
@@ -178,6 +188,7 @@ public class EmailBuilder {
         this.attachments.clear();
     }
     
+    @Override
     public void clearAttachments() {
         this.attachments.clear();
     }

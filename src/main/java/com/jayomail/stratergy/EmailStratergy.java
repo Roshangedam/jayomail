@@ -21,15 +21,45 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import com.jayomail.enums.MailProtocol;
+
 public abstract class EmailStratergy {
-	protected String smtpServer;
-	protected int smtpPort;
+	protected String emailServer;
+    protected MailProtocol emailProtocol;
+    protected int emailPort;
+    protected Map<String, String> additionalProperties;
 
-	public EmailStratergy(String smtpServer, int smtpPort) {
-		this.smtpServer = smtpServer;
-		this.smtpPort = smtpPort;
-	}
+    public EmailStratergy(String emailServer, int emailPort, MailProtocol emailProtocol) {
+        this.emailServer = emailServer;
+        this.emailPort = emailPort;
+        this.emailProtocol = emailProtocol;
+        this.additionalProperties = new HashMap<String,String>();
+        additionalProperties.put("mail.store.protocol", emailProtocol.toString());
+        additionalProperties.put("mail." + emailProtocol.toString().toLowerCase() + ".host", emailServer);
+        additionalProperties.put("mail." + emailProtocol.toString().toLowerCase() + ".port", String.valueOf(emailPort));
+    }
 
+    public EmailStratergy(String emailServer, int emailPort, MailProtocol emailProtocol, Map<String, String> additionalProperties) {
+        this.emailServer = emailServer;
+        this.emailPort = emailPort;
+        this.emailProtocol = emailProtocol;
+        this.additionalProperties = additionalProperties;
+        // Ensure default properties are applied
+        if (!additionalProperties.containsKey("mail.store.protocol")) {
+            additionalProperties.put("mail.store.protocol", emailProtocol.toString());
+        }
+        if (!additionalProperties.containsKey("mail." + emailProtocol.toString().toLowerCase() + ".host")) {
+            additionalProperties.put("mail." + emailProtocol.toString().toLowerCase() + ".host", emailServer);
+        }
+        if (!additionalProperties.containsKey("mail." + emailProtocol.toString().toLowerCase() + ".port")) {
+            additionalProperties.put("mail." + emailProtocol.toString().toLowerCase() + ".port", String.valueOf(emailPort));
+        }
+    }
+    protected Session createMailSession() {
+        Properties props = new Properties();
+        props.putAll(additionalProperties);
+        return Session.getDefaultInstance(props);
+    }
 	public abstract Map<String, String> sendEmail(String senderEmail, String appPassword, String recipientEmail,
 			String subject, String body, String htmlContent, List<String> attachments);
 
@@ -37,11 +67,7 @@ public abstract class EmailStratergy {
 			String body, String htmlContent, List<String> attachments) {
 		Map<String, String> response = new HashMap<>();
 
-		Properties props = System.getProperties();
-		props.put("mail.smtp.host", smtpServer);
-		props.put("mail.smtp.port", smtpPort);
-		props.put("mail.smtp.starttls.enable", "true");
-		Session session = Session.getInstance(props, null);
+		Session session = createMailSession();
 
 		try {
 			MimeMessage msg = new MimeMessage(session);
@@ -78,8 +104,9 @@ public abstract class EmailStratergy {
 			// Populate response map with information for success
 										
 			response.put("timestamp", new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()));
-			response.put("smtp_server", smtpServer);
-			response.put("smtp_port", String.valueOf(smtpPort));
+			response.put("email_server", emailServer);
+			response.put("email_protocol", emailProtocol.toString());
+			response.put("email_port", String.valueOf(emailPort));
 			response.put("subject", subject);
 			response.put("to", recipientEmail);
 			response.put("from", senderEmail);
@@ -94,28 +121,39 @@ public abstract class EmailStratergy {
 			response.put("to", recipientEmail);
 			response.put("subject", subject);
 			response.put("timestamp", new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()));
-			response.put("smtp_server", smtpServer);
-			response.put("smtp_port", String.valueOf(smtpPort));
+			response.put("email_server", emailServer);
+			response.put("email_protocol", emailProtocol.toString());
+			response.put("email_port", String.valueOf(emailPort));			
 			response.put("error_message", e.getMessage()); // Include error message in response
 		}
 
 		return response;
 	}
 
-	public String getSmtpServer() {
-		return smtpServer;
+	public String getEmailServer() {
+		return emailServer;
 	}
 
-	public void setSmtpServer(String smtpServer) {
-		this.smtpServer = smtpServer;
+	public void setEmailServer(String emailServer) {
+		this.emailServer = emailServer;
 	}
 
-	public int getSmtpPort() {
-		return smtpPort;
+	public MailProtocol getEmailProtocol() {
+		return emailProtocol;
 	}
 
-	public void setSmtpPort(int smtpPort) {
-		this.smtpPort = smtpPort;
+	public void setEmailProtocol(MailProtocol emailProtocol) {
+		this.emailProtocol = emailProtocol;
 	}
+
+	public int getEmailPort() {
+		return emailPort;
+	}
+
+	public void setEmailPort(int emailPort) {
+		this.emailPort = emailPort;
+	}
+
+	
 
 }
