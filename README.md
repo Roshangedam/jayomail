@@ -1,5 +1,5 @@
 
-# JayoMail - Open Source Email Sending Utility ✉️
+# JayoMail - Open Source Email Sending Utility For Java ✉️
 
 JayoMail is an open-source Java utility for sending emails with different email providers. It provides a flexible architecture supporting various email protocols and a convenient interface for configuring and sending emails.
 
@@ -22,7 +22,7 @@ Add the following dependency to your `pom.xml`:
 <dependency>
     <groupId>io.github.roshangedam</groupId>
     <artifactId>jayomail</artifactId>
-    <version>2.0.0</version>
+    <version>3.0.0</version>
 </dependency>
 ```
 
